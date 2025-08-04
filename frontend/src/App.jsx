@@ -1,14 +1,9 @@
-import React from 'react'
-import Header from '../components/Header.jsx'
-import LandingPage from '../components/LandingPage.jsx'
+import React from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes';
 
 function App() {
-  return (
-    <div className="App">
-      <Header />
-      <LandingPage />
-    </div>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App 
+export default App; 

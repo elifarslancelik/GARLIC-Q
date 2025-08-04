@@ -1,0 +1,92 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+.venv/
+.env/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.psql
+
+# Logs
+*.log
+backend.log
+app.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI Models
+*.pth
+*.pt
+*.pkl
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+
+# Temporary files
+temp/
+tmp/
+uploads/
+temp_uploads/
+
+# Secrets
+secrets.json
+config.json
+credentials.json
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/ 

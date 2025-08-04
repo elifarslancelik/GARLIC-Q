@@ -1,4 +1,4 @@
-# AI Model files (large files that shouldn't be in git)
+# AI Model files (large files)
 *.bin
 *.safetensors
 *.gguf
@@ -12,38 +12,77 @@
 *.tflite
 *.pb
 
-# Model checkpoints
-checkpoints/
-saved_models/
-model_cache/
-
-# Large model files
-*.model
-*.weights
-*.tensor
-
-# Temporary model files
-temp_models/
+# Model cache directories
 cache/
-downloads/
+.cache/
+__pycache__/
+*.pyc
+*.pyo
 
-# Model metadata (if contains sensitive info)
-model_config.json
-model_info.json
+# Downloaded models
+downloaded_models/
+models/
+checkpoints/
 
-# Logs
+# Hugging Face cache
+.cache/huggingface/
+/root/.cache/huggingface/
+
+# PyTorch cache
+.cache/torch/
+/root/.cache/torch/
+
+# TensorFlow cache
+.cache/tensorflow/
+/root/.cache/tensorflow/
+
+# Log files
 *.log
-model_logs/
+logs/
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.temp
+
+# Environment files
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# IDE files
-.vscode/
-.idea/
+# Test outputs
+test_outputs/
+test_results/
+
+# Large data files
+*.csv
+*.json (data files)
+*.parquet
+*.feather
 
 # Backup files
 *.bak
 *.backup
-*.old 
+*.old
+
+# Secrets and configs
+secrets.json
+config.json
+credentials.json
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx 

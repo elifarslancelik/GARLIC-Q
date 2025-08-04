@@ -176,3 +176,153 @@ credentials.json
 *.bak
 *.backup
 *.old
+
+# Docker volumes and data
+postgres_data/
+ollama_data/
+model_cache/
+docker_data/
+
+# AI Model cache directories
+/root/.cache/torch/
+/root/.cache/huggingface/
+models/cache/
+.cache/torch/
+.cache/huggingface/
+
+# Database dumps and backups
+*.sql
+*.dump
+backups/
+database_backups/
+
+# User data and uploads
+user_data/
+face_embeddings/
+user_uploads/
+face_images/
+
+# Test data and temporary files
+test_data/
+sample_data/
+temp_data/
+*.csv
+*.json (data files)
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+
+# Screenshots (if large)
+screenshots/*.png
+screenshots/*.jpg
+screenshots/*.jpeg
+screenshots/*.gif
+
+# Python specific
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Node.js specific
+node_modules/
+.npm
+.eslintcache
+.yarn-integrity
+
+# IDE specific
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+
+# OS specific
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Development specific
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Log files
+*.log
+logs/
+backend.log
+frontend.log
+app.log
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage and test files
+coverage/
+.pytest_cache/
+.tox/
+.hypothesis/
+*.cover
+
+# Temporary and cache files
+.cache/
+.parcel-cache/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Build artifacts
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+
+# TypeScript
+*.tsbuildinfo
+
+# SvelteKit
+.svelte-kit
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify
+
+# Storybook
+.storybook-out
+
+# Vite
+.vite
+
+# Temporary folders
+tmp/
+temp/
+
+# Local development
+.local/

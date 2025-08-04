@@ -1,0 +1,49 @@
+# AI Model files (large files that shouldn't be in git)
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+*.pth
+*.pt
+*.pkl
+*.h5
+*.hdf5
+*.onnx
+*.tflite
+*.pb
+
+# Model checkpoints
+checkpoints/
+saved_models/
+model_cache/
+
+# Large model files
+*.model
+*.weights
+*.tensor
+
+# Temporary model files
+temp_models/
+cache/
+downloads/
+
+# Model metadata (if contains sensitive info)
+model_config.json
+model_info.json
+
+# Logs
+*.log
+model_logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Backup files
+*.bak
+*.backup
+*.old 

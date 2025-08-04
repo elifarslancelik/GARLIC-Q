@@ -1,0 +1,18 @@
+{
+  "name": "@garlic-q/shared",
+  "version": "1.0.0",
+  "description": "GARLIC-Q Shared Utilities",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./constants": "./constants.js"
+  },
+  "scripts": {
+    "build": "echo 'Shared package - no build needed'",
+    "test": "echo 'Shared package - no tests yet'"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {}
+} 

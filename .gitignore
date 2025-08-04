@@ -89,6 +89,8 @@ jspm_packages/
 
 .cache
 .parcel-cache
+.pycache/
+__pycache__/
 
 # Vite
 .vite

@@ -4,22 +4,22 @@ layers of garlic
 
 ![GARLIC-Q Logo](frontend/assets/garliq.png)
 
+## Project Structure - Monorepo
 
-## project structure - monorepo
+### Service Architecture
 
 ```
-GARLIC-Q/
-├── frontend/          # React + Vite frontend application
-│   ├── src/
-│   ├── components/
-│   ├── assets/
-│   └── package.json
-├── backend/           # Express.js backend API
-│   ├── src/
-│   │   ├── routes/
-│   │   └── server.js
-│   └── package.json
-├── shared/            # Shared utilities and constants
-│   └── constants.js
-└── package.json       # Root package.json for monorepo management
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │    Backend      │    │     Models      │
+│   (Port xx)     │◄──►│   (Port xxxx)   │◄──►│   (Port xxxx)   │
+│   nginx + React │    │   FastAPI       │    │   AI/ML         │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   PostgreSQL    │
+                    │   (Port xxxx)   │
+                    │   + pgvector    │
+                    └─────────────────┘
 ```

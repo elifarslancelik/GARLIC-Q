@@ -7,6 +7,7 @@ Handles model loading, text generation, and code completion
 import requests
 import json
 import time
+import os
 from typing import Dict, List, Optional, Any
 import logging
 
@@ -15,17 +16,25 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class OllamaClient:
-    def __init__(self, base_url: str = "http://ollama:11434", model_name: str = "codellama:7b"):
+    def __init__(self, base_url: str = None, model_name: str = "codellama:7b"):
         """
         Initialize Ollama client
         
         Args:
-            base_url: Ollama server URL (default: localhost:11434)
+            base_url: Ollama server URL (default: from environment variable)
             model_name: Model name to use (default: codellama:7b)
         """
+        # Get base_url from environment variable
+        if base_url is None:
+            base_url = os.getenv("OLLAMA_BASE_URL")
+            if not base_url:
+                raise ValueError("OLLAMA_BASE_URL environment variable must be set")
+        
         self.base_url = base_url.rstrip('/')
         self.model_name = model_name
         self.session = requests.Session()
+        
+        logger.info(f"Initialized Ollama client with base_url: {self.base_url}")
         
     def check_server(self) -> bool:
         """

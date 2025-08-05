@@ -15,7 +15,7 @@ export const ENDPOINTS = {
   HEALTH: '/health'
 };
 
-// HTTP Status Codes
+// HTTP Status
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,

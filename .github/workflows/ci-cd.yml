@@ -1,0 +1,166 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+jobs:
+  # Detect changes and build only affected components
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for change detection
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver-opts: |
+          image=moby/buildkit:v0.12.0
+        buildkitd-flags: --debug
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    - name: Detect changes
+      id: changes
+      run: |
+        # Get list of changed files
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD || echo "")
+        echo "Changed files: $CHANGED_FILES"
+        
+        # Check which components were affected
+        BACKEND_CHANGED=false
+        FRONTEND_CHANGED=false
+        MODELS_CHANGED=false
+        
+        if echo "$CHANGED_FILES" | grep -q "^backend/"; then
+          BACKEND_CHANGED=true
+          echo "Backend changes detected"
+        fi
+        
+        if echo "$CHANGED_FILES" | grep -q "^frontend/"; then
+          FRONTEND_CHANGED=true
+          echo "Frontend changes detected"
+        fi
+        
+        if echo "$CHANGED_FILES" | grep -q "^models/"; then
+          MODELS_CHANGED=true
+          echo "Models changes detected"
+        fi
+        
+        # Check shared changes (affects all components)
+        if echo "$CHANGED_FILES" | grep -q "^shared/"; then
+          BACKEND_CHANGED=true
+          FRONTEND_CHANGED=true
+          MODELS_CHANGED=true
+          echo "Shared changes detected - rebuilding all components"
+        fi
+        
+        # Check root level changes (package.json, docker-compose.yml, etc.)
+        if echo "$CHANGED_FILES" | grep -q "^package.json\|^docker-compose.yml\|^Dockerfile"; then
+          BACKEND_CHANGED=true
+          FRONTEND_CHANGED=true
+          MODELS_CHANGED=true
+          echo "Root level changes detected - rebuilding all components"
+        fi
+        
+        # Set outputs
+        echo "backend_changed=$BACKEND_CHANGED" >> $GITHUB_OUTPUT
+        echo "frontend_changed=$FRONTEND_CHANGED" >> $GITHUB_OUTPUT
+        echo "models_changed=$MODELS_CHANGED" >> $GITHUB_OUTPUT
+        
+        # Get commit SHA for tagging
+        echo "commit_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        
+        echo "Build plan:"
+        echo "- Backend: $BACKEND_CHANGED"
+        echo "- Frontend: $FRONTEND_CHANGED"
+        echo "- Models: $MODELS_CHANGED"
+    
+    # Build and push Backend
+    - name: Build and push Backend
+      if: steps.changes.outputs.backend_changed == 'true'
+      run: |
+        echo "🏗️ Building Backend Docker image..."
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          --tag ${{ env.DOCKERHUB_USERNAME }}/garlic-q-backend:latest \
+          --tag ${{ env.DOCKERHUB_USERNAME }}/garlic-q-backend:${{ steps.changes.outputs.commit_sha }} \
+          --file backend/Dockerfile \
+          --push \
+          .
+        echo "✅ Backend image pushed successfully"
+    
+    # Build and push Frontend
+    - name: Build and push Frontend
+      if: steps.changes.outputs.frontend_changed == 'true'
+      run: |
+        echo "🏗️ Building Frontend Docker image..."
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          --tag ${{ env.DOCKERHUB_USERNAME }}/garlic-q-frontend:latest \
+          --tag ${{ env.DOCKERHUB_USERNAME }}/garlic-q-frontend:${{ steps.changes.outputs.commit_sha }} \
+          --file frontend/Dockerfile \
+          --push \
+          .
+        echo "✅ Frontend image pushed successfully"
+    
+    # Build and push Models
+    - name: Build and push Models
+      if: steps.changes.outputs.models_changed == 'true'
+      run: |
+        echo "🏗️ Building Models Docker image..."
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          --tag ${{ env.DOCKERHUB_USERNAME }}/garlic-q-models:latest \
+          --tag ${{ env.DOCKERHUB_USERNAME }}/garlic-q-models:${{ steps.changes.outputs.commit_sha }} \
+          --file models/Dockerfile \
+          --push \
+          .
+        echo "✅ Models image pushed successfully"
+    
+    # Summary
+    - name: Build Summary
+      run: |
+        echo "🎉 Build Summary:"
+        echo "- Backend built: ${{ steps.changes.outputs.backend_changed }}"
+        echo "- Frontend built: ${{ steps.changes.outputs.frontend_changed }}"
+        echo "- Models built: ${{ steps.changes.outputs.models_changed }}"
+        echo "- Commit SHA: ${{ steps.changes.outputs.commit_sha }}"
+        echo "- Docker Hub Username: ${{ env.DOCKERHUB_USERNAME }}"
+        
+        if [ "${{ steps.changes.outputs.backend_changed }}" == "true" ]; then
+          echo "📦 Backend images:"
+          echo "  - ${{ env.DOCKERHUB_USERNAME }}/garlic-q-backend:latest"
+          echo "  - ${{ env.DOCKERHUB_USERNAME }}/garlic-q-backend:${{ steps.changes.outputs.commit_sha }}"
+        fi
+        
+        if [ "${{ steps.changes.outputs.frontend_changed }}" == "true" ]; then
+          echo "📦 Frontend images:"
+          echo "  - ${{ env.DOCKERHUB_USERNAME }}/garlic-q-frontend:latest"
+          echo "  - ${{ env.DOCKERHUB_USERNAME }}/garlic-q-frontend:${{ steps.changes.outputs.commit_sha }}"
+        fi
+        
+        if [ "${{ steps.changes.outputs.models_changed }}" == "true" ]; then
+          echo "📦 Models images:"
+          echo "  - ${{ env.DOCKERHUB_USERNAME }}/garlic-q-models:latest"
+          echo "  - ${{ env.DOCKERHUB_USERNAME }}/garlic-q-models:${{ steps.changes.outputs.commit_sha }}"
+        fi 

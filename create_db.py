@@ -5,6 +5,10 @@ import psycopg2
 import logging
 from sqlalchemy import create_engine, text
 from backend.app.db import Base, engine
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -20,14 +24,26 @@ logger = logging.getLogger(__name__)
 def init_database():
     """Initialize the database with pgvector extension and create tables"""
     
-    # Database connection parameters
+    # Get database connection from environment
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise ValueError("DATABASE_URL environment variable must be set")
+    
+    # Parse database URL for connection parameters
+    from urllib.parse import urlparse
+    parsed = urlparse(database_url)
+    
     db_params = {
-        'host': 'localhost',
-        'port': 5432,
-        'database': 'garlicq',
-        'user': 'postgres',
-        'password': 'password'
+        'host': parsed.hostname,
+        'port': parsed.port or 5432,
+        'database': parsed.path.lstrip('/'),
+        'user': parsed.username,
+        'password': parsed.password
     }
+    
+    # Validate required parameters
+    if not all([db_params['host'], db_params['database'], db_params['user']]):
+        raise ValueError("DATABASE_URL must include host, database, and user")
     
     try:
         # Connect to PostgreSQL
@@ -40,10 +56,10 @@ def init_database():
         cursor.execute("CREATE EXTENSION IF NOT EXISTS vector;")
         
         # Create database if it doesn't exist
-        cursor.execute("SELECT 1 FROM pg_database WHERE datname = 'garlicq'")
+        cursor.execute("SELECT 1 FROM pg_database WHERE datname = %s", (db_params['database'],))
         if not cursor.fetchone():
-            logger.info("Creating database...")
-            cursor.execute("CREATE DATABASE garlicq;")
+            logger.info(f"Creating database: {db_params['database']}")
+            cursor.execute(f"CREATE DATABASE {db_params['database']};")
         
         cursor.close()
         conn.close()

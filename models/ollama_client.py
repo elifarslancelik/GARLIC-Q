@@ -24,7 +24,7 @@ class OllamaClient:
             base_url: Ollama server URL (default: from environment variable)
             model_name: Model name to use (default: codellama:7b)
         """
-        # Get base_url from environment variable
+        # Get base_url from env
         if base_url is None:
             base_url = os.getenv("OLLAMA_BASE_URL")
             if not base_url:

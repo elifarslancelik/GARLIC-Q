@@ -11,18 +11,38 @@ class Settings:
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "GARLIC-Q"
     
-    # CORS Settings
-    BACKEND_CORS_ORIGINS: list = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://localhost:8080",
-        "http://localhost:80",
-        "http://localhost:8000"
-    ]
+    # Environment detection
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
     
-    # Add production origins from environment
-    if os.getenv("CORS_ORIGINS"):
-        BACKEND_CORS_ORIGINS.extend(os.getenv("CORS_ORIGINS").split(","))
+    # CORS Settings - Smart configuration based on environment
+    BACKEND_CORS_ORIGINS: list = []
+    
+    if ENVIRONMENT == "production":
+        # Production: Only allow specific domains
+        BACKEND_CORS_ORIGINS = [
+            "https://garlicq.cc",
+            "http://garlicq.cc"
+        ]
+        # Add additional production domains from environment
+        if os.getenv("CORS_ORIGINS"):
+            BACKEND_CORS_ORIGINS.extend(os.getenv("CORS_ORIGINS").split(","))
+    else:
+        # Development: Allow localhost and common dev ports
+        BACKEND_CORS_ORIGINS = [
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://localhost:8080",
+            "http://localhost:80",
+            "http://localhost:8000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:8080",
+            "http://127.0.0.1:80",
+            "http://127.0.0.1:8000"
+        ]
+        # Add additional development domains from environment
+        if os.getenv("CORS_ORIGINS"):
+            BACKEND_CORS_ORIGINS.extend(os.getenv("CORS_ORIGINS").split(","))
     
     # Face Recognition Settings
     USER_LIMIT: int = 50

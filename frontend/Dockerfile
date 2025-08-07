@@ -15,6 +15,10 @@ RUN npm ci
 COPY frontend/ ./frontend/
 COPY shared/ ./shared/
 
+# Set environment variables for build
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL:-/api/v1}
+
 # Build the application
 RUN npm run build --workspace=frontend
 

@@ -17,7 +17,7 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
-    host: 'localhost'
+    host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost'
   },
   resolve: {
     alias: {

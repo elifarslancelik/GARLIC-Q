@@ -31,6 +31,9 @@ RUN apk add --no-cache bash
 # Copy built files from builder stage
 COPY --from=builder /app/frontend/dist /usr/share/nginx/html
 
+# Copy assets directory separately to ensure it's available
+COPY --from=builder /app/frontend/assets /usr/share/nginx/html/assets
+
 # Copy nginx configuration template
 COPY frontend/nginx.conf /etc/nginx/nginx.conf.template
 

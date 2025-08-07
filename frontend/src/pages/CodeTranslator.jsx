@@ -28,7 +28,7 @@ const CodeTranslator = ({ onClose, onTranslate, editorCode = '', editorLanguage 
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/code/languages');
+        const response = await fetch('/api/v1/code/languages');
         if (response.ok) {
           const data = await response.json();
           setLanguages(data.languages);
@@ -58,7 +58,7 @@ const CodeTranslator = ({ onClose, onTranslate, editorCode = '', editorLanguage 
     setTranslatedCode('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/code/translate', {
+      const response = await fetch('/api/v1/code/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -33,7 +33,7 @@ const RecipesGQ = () => {
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/code/languages');
+        const response = await fetch('/api/v1/code/languages');
         if (response.ok) {
           const data = await response.json();
           setLanguages(data.languages);
@@ -52,7 +52,7 @@ const RecipesGQ = () => {
 
     setIsGenerating(true);
     try {
-      const response = await fetch('http://localhost:8000/api/v1/code/generate', {
+      const response = await fetch('/api/v1/code/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ const RecipesGQ = () => {
 
     try {
       // Call Ollama API for real AI response
-      const response = await fetch('http://localhost:8000/api/v1/chat/generate', {
+      const response = await fetch('/api/v1/chat/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

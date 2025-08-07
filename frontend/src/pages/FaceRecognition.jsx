@@ -65,7 +65,7 @@ const FaceRecognition = ({ onClose, onSuccess }) => {
     formData.append('file', imageBlob, 'face.jpg');
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/users/login', {
+      const response = await fetch('/api/v1/users/login', {
         method: 'POST',
         body: formData,
       });
@@ -89,7 +89,7 @@ const FaceRecognition = ({ onClose, onSuccess }) => {
     formData.append('file', imageBlob, 'face.jpg');
 
     try {
-      const response = await fetch('http://localhost:8000/api/v1/users/signup', {
+      const response = await fetch('/api/v1/users/signup', {
         method: 'POST',
         body: formData,
       });

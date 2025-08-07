@@ -1,7 +1,7 @@
 // API Configuration
 export const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? '/api' 
-  : (process.env.VITE_API_BASE_URL || 'http://localhost:5000/api');
+  : (process.env.VITE_API_BASE_URL || '/api/v1');
 
 // Application Constants
 export const APP_NAME = 'GARLIC-Q';

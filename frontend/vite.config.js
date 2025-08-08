@@ -21,7 +21,12 @@ export default defineConfig({
   preview: {
     port: process.env.PORT || 4173,
     host: '0.0.0.0',
-    allowedHosts: 'all'
+    allowedHosts: [
+      'garlic-q.onrender.com',
+      '.onrender.com',
+      'localhost',
+      '127.0.0.1'
+    ]
   },
   resolve: {
     alias: {

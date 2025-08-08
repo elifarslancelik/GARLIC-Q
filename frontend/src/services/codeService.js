@@ -1,6 +1,18 @@
 import { api } from '../utils/api';
 
 export const codeService = {
+  getLanguages: async () => {
+    try {
+      const response = await api.getLanguages();
+      if (response.error) {
+        throw new Error(response.error);
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   generateCode: async (prompt, language, maxTokens = 512, temperature = 0.3) => {
     try {
       const response = await api.generateCode(prompt, language, maxTokens, temperature);

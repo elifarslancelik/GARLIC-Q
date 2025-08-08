@@ -1,10 +1,5 @@
 import logging
-import sys
-import os
 from fastapi import HTTPException, status
-
-# Add parent directory to path for models import
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 logger = logging.getLogger(__name__)
 

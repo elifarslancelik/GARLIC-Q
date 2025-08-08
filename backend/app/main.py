@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 from .core.database import Base, engine
 from .api.v1 import auth_router, code_router, chat_router
+from .middlewares import rate_limit_middleware, SecurityHeadersMiddleware, validation_middleware
 
 # Configure logging
 logging.basicConfig(
@@ -22,6 +23,9 @@ app = FastAPI(
     version="1.0.0",
     description="GARLIC-Q - AI-Hub"
 )
+
+# Add security middleware
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Add CORS middleware
 app.add_middleware(
@@ -45,8 +49,17 @@ async def startup_event():
 
 # Health check endpoint for Render monitoring
 @app.get("/health")
-def health_check():
+async def health_check():
     return {"status": "healthy", "service": settings.PROJECT_NAME}
+
+# Add security middleware to all routes
+@app.middleware("http")
+async def add_security_middleware(request, call_next):
+    # Apply rate limiting
+    response = await rate_limit_middleware(request, call_next)
+    # Apply input validation
+    response = await validation_middleware(request, lambda: response)
+    return response
 
 # Include API routers
 app.include_router(auth_router, prefix=settings.API_V1_STR)

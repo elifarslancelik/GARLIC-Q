@@ -1,4 +1,5 @@
 import logging
+import os
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 import numpy as np
@@ -17,14 +18,6 @@ class AuthService:
         """
         Signup user with face recognition, add vector to database, return user id
         """
-        # Control user limit
-        user_count = db.query(User).count()
-        if user_count >= settings.USER_LIMIT:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"User limit reached, {settings.USER_LIMIT} users allowed"
-            )
-        
         try:
             embedding = self.face_service.get_face_embedding(image_bytes)
 
@@ -34,8 +27,11 @@ class AuthService:
                     detail="Face detection failed"
                 )
             
-            # Create new user with embedding
-            new_user = User(face_embedding=embedding.tolist())
+            # Create new user with embedding and default threshold
+            new_user = User(
+                face_embedding=embedding.tolist(),
+                recognition_threshold=0.6  # Default threshold
+            )
             db.add(new_user)
             db.commit()
             db.refresh(new_user)
@@ -87,20 +83,22 @@ class AuthService:
                 if similarity > best_similarity:
                     best_similarity = similarity
                     best_match_id = user.id
+                    best_match_threshold = user.recognition_threshold
 
-            # If best similarity is above threshold, login successful
-            if best_similarity > settings.RECOGNITION_THRESHOLD:
-                logger.info(f"Login successful for user {best_match_id} with similarity {best_similarity}")
+            # If best similarity is above user's threshold, login successful
+            if best_similarity > best_match_threshold:
+                logger.info(f"Login successful for user {best_match_id} with similarity {best_similarity} (threshold: {best_match_threshold})")
                 return {
                     "message": "Login successful", 
                     "user_id": best_match_id, 
-                    "similarity": float(best_similarity)
+                    "similarity": float(best_similarity),
+                    "threshold": float(best_match_threshold)
                 }
             else:
-                logger.warning(f"Login failed, best match similarity ({best_similarity:.2f}) lower than threshold ({settings.RECOGNITION_THRESHOLD})")
+                logger.warning(f"Login failed, best match similarity ({best_similarity:.2f}) lower than user threshold ({best_match_threshold})")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail=f"Login failed, best match similarity ({best_similarity:.2f}) lower than threshold ({settings.RECOGNITION_THRESHOLD})"
+                    detail=f"Login failed, best match similarity ({best_similarity:.2f}) lower than user threshold ({best_match_threshold})"
                 )
         except HTTPException:
             raise

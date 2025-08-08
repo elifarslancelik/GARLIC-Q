@@ -10,6 +10,9 @@ pgvector>=0.2.5
 # Environment
 python-dotenv>=1.0.0
 
+# Security
+cryptography>=41.0.0
+
 # AI and ML
 facenet-pytorch>=2.5.3
 torch>=2.3.0
@@ -20,6 +23,7 @@ Pillow>=10.3.0
 # HTTP and API
 python-multipart>=0.0.9
 requests>=2.31.0
+starlette>=0.30.0
 
 # Validation and Types
 pydantic>=2.0.0

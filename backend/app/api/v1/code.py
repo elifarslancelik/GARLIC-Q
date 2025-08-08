@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from typing import List, Optional
 
 from ...services.code_service import code_service
@@ -18,7 +18,8 @@ class CodeGenerationRequest(BaseModel):
     max_tokens: int = 512
     temperature: float = 0.3
 
-    @validator('language')
+    @field_validator('language')
+    @classmethod
     def validate_language(cls, v):
         if v not in SUPPORTED_LANGUAGES:
             raise ValueError(f'Unsupported language: {v}. Supported languages: {", ".join(sorted(SUPPORTED_LANGUAGES))}')
@@ -34,7 +35,8 @@ class CodeTranslationRequest(BaseModel):
     source_language: str
     target_language: str
 
-    @validator('source_language', 'target_language')
+    @field_validator('source_language', 'target_language')
+    @classmethod
     def validate_languages(cls, v):
         if v not in SUPPORTED_LANGUAGES:
             raise ValueError(f'Unsupported language: {v}. Supported languages: {", ".join(sorted(SUPPORTED_LANGUAGES))}')

@@ -25,7 +25,7 @@ const Space = () => {
               <div className="space-y-4">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 bg-gradient-to-br from-gray-800 to-black rounded-3xl flex items-center justify-center shadow-lg overflow-hidden">
-                    <img src="../assets/garliq.png" alt="GARLIC-Q Logo" className="w-16 h-16 object-contain" />
+                    <img src="/garliq.png" alt="GARLIC-Q Logo" className="w-16 h-16 object-contain" />
                   </div>
                 </div>
                 <h1 className="text-3xl font-light text-white tracking-wide" style={{ fontFamily: 'Segoe UI, -apple-system, BlinkMacSystemFont, sans-serif' }}>

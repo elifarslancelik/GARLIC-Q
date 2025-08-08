@@ -1,7 +1,7 @@
 {
   "name": "@garlic-q/frontend",
   "version": "1.0.0",
-  "description": "GARLIC-Q Frontend Application",
+  "description": "GARLIC-Q Frontend",
   "type": "module",
   "scripts": {
     "dev": "vite",

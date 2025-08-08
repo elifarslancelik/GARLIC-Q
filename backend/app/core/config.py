@@ -36,6 +36,11 @@ class Settings:
     
     # Ollama Settings
     OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL")
+    
+    # Security Settings
+    RATE_LIMIT_PER_MINUTE: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
+    MAX_FILE_SIZE_MB: int = int(os.getenv("MAX_FILE_SIZE_MB", "10"))
+    ENABLE_DEBUG: bool = os.getenv("ENABLE_DEBUG", "false").lower() == "true"
 
 # Validate environment on import
 validate_environment()

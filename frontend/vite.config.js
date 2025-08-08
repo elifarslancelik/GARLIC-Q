@@ -14,6 +14,14 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false
   },
+  server: {
+    port: process.env.PORT || 5173,
+    host: '0.0.0.0'
+  },
+  preview: {
+    port: process.env.PORT || 4173,
+    host: '0.0.0.0'
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')

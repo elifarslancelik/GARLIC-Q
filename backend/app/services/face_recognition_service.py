@@ -117,12 +117,12 @@ class FaceRecognitionService:
             logger.error(f"Error calculating cosine similarity: {e}")
             return 0.0
 
-    def verify_face_match(self, login_embedding, user_embedding):
+    def verify_face_match(self, login_embedding, user_embedding, threshold=0.6):
         """
         Verify if login embedding matches user embedding
         """
         similarity = self.cosine_similarity(login_embedding, user_embedding)
-        return similarity > settings.RECOGNITION_THRESHOLD, similarity
+        return similarity > threshold, similarity
 
 # Global instance
 face_recognition_service = FaceRecognitionService() 

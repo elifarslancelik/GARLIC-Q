@@ -1,3 +1,4 @@
+# Aşama 1: Bağımlılıkları Derleme
 FROM python:3.11.9-slim AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -16,15 +17,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY requirements.lock requirements.txt ./
+COPY requirements.lock ./
 RUN pip install --upgrade pip && \
-    pip install -r requirements.lock || pip install -r requirements.txt
+    pip install -r requirements.lock
 
-# Step 2: Final image
+# Aşama 2: Nihai Çalışma İmajı
 FROM python:3.11.9-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    HOME=/app \
+    XDG_CACHE_HOME=/app/cache \
+    TORCH_HOME=/app/cache
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
@@ -36,9 +41,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
+RUN mkdir -p /app/cache && chmod -R 777 /app/cache
+
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY app ./app
+COPY models ./models
 
 RUN groupadd -r appgroup && \
     useradd -r -g appgroup -d /app -s /usr/sbin/nologin appuser && \

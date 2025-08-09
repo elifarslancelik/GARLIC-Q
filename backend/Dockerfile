@@ -1,5 +1,5 @@
 # Aşama 1: Bağımlılıkları Derleme
-FROM python:3.11.9-slim AS builder
+FROM python:3.10.14-slim AS builder
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -22,7 +22,7 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.lock
 
 # Aşama 2: Nihai Çalışma İmajı
-FROM python:3.11.9-slim
+FROM python:3.10.14-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -43,7 +43,7 @@ WORKDIR /app
 
 RUN mkdir -p /app/cache && chmod -R 777 /app/cache
 
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY app ./app
 COPY models ./models

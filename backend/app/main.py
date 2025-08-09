@@ -52,14 +52,20 @@ async def startup_event():
 async def health_check():
     return {"status": "healthy", "service": settings.PROJECT_NAME}
 
-# Add security middleware to all routes
+# Root endpoint to avoid 404 on GET /
+@app.get("/")
+async def root():
+    return {"status": "ok", "docs": "/docs", "api": settings.API_V1_STR}
+
+# Apply rate limiting middleware
 @app.middleware("http")
-async def add_security_middleware(request, call_next):
-    # Apply rate limiting
-    response = await rate_limit_middleware(request, call_next)
-    # Apply input validation
-    response = await validation_middleware(request, lambda: response)
-    return response
+async def apply_rate_limit(request, call_next):
+    return await rate_limit_middleware(request, call_next)
+
+# Apply validation middleware
+@app.middleware("http")
+async def apply_validation(request, call_next):
+    return await validation_middleware(request, call_next)
 
 # Include API routers
 app.include_router(auth_router, prefix=settings.API_V1_STR)
